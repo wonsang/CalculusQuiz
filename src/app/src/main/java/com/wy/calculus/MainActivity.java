@@ -22,6 +22,7 @@ public class MainActivity extends Activity {
 	private LinearLayout linear2;
 	private LinearLayout linear3;
 	private LinearLayout linear4;
+	private LinearLayout linear5;
 	private TextView value1view;
 	private TextView operatorview;
 	private TextView value2view;
@@ -29,16 +30,21 @@ public class MainActivity extends Activity {
 	private EditText answeredit;
 	private TextView resulttext;
 	private TextView answerview;
+	private Button nextbutton;
 	private Button submitbutton;
 	private Button clearbutton;
 	private TextView scoretext;
 	private TextView scoreview;
 	private TextView cnttext;
 	private TextView cntview;
+	private TextView timetext;
+	private TextView timeview;
 	private TextView leveltext;
 	private EditText levelview;
 	private TextView modetext;
 	private EditText modeedit;
+	private TextView maxtimetext;
+	private EditText maxtimeedit;
 
 	private double value1 = 0;
 	private double value2 = 0;
@@ -49,6 +55,8 @@ public class MainActivity extends Activity {
 	private double count = 0;
 	private boolean iscorrect;
 	private double operation = 0;
+	private double timecnt = 0;
+	private double maxtime = 0;
 
 
 	private Timer _timer = new Timer();
@@ -68,6 +76,7 @@ public class MainActivity extends Activity {
 		linear2 = (LinearLayout) findViewById(R.id.linear2);
 		linear3 = (LinearLayout) findViewById(R.id.linear3);
 		linear4 = (LinearLayout) findViewById(R.id.linear4);
+		linear5 = (LinearLayout) findViewById(R.id.linear5);
 		value1view = (TextView) findViewById(R.id.value1view);
 		operatorview = (TextView) findViewById(R.id.operatorview);
 		value2view = (TextView) findViewById(R.id.value2view);
@@ -75,45 +84,52 @@ public class MainActivity extends Activity {
 		answeredit = (EditText) findViewById(R.id.answeredit);
 		resulttext = (TextView) findViewById(R.id.resulttext);
 		answerview = (TextView) findViewById(R.id.answerview);
+		nextbutton = (Button) findViewById(R.id.nextbutton);
 		submitbutton = (Button) findViewById(R.id.submitbutton);
 		clearbutton = (Button) findViewById(R.id.clearbutton);
 		scoretext = (TextView) findViewById(R.id.scoretext);
 		scoreview = (TextView) findViewById(R.id.scoreview);
 		cnttext = (TextView) findViewById(R.id.cnttext);
 		cntview = (TextView) findViewById(R.id.cntview);
+		timetext = (TextView) findViewById(R.id.timetext);
+		timeview = (TextView) findViewById(R.id.timeview);
 		leveltext = (TextView) findViewById(R.id.leveltext);
 		levelview = (EditText) findViewById(R.id.levelview);
 		modetext = (TextView) findViewById(R.id.modetext);
 		modeedit = (EditText) findViewById(R.id.modeedit);
+		maxtimetext = (TextView) findViewById(R.id.maxtimetext);
+		maxtimeedit = (EditText) findViewById(R.id.maxtimeedit);
 
 
 
 		submitbutton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View _v) { 
-				count++;
-				cntview.setText(String.valueOf((long)(count)));
-				_checkanswer();
-				reporttimer = new TimerTask() {
-							@Override
-								public void run() {
-									runOnUiThread(new Runnable() {
-									@Override
-										public void run() {
-														_newproblem();
-										}
-									});
-								}
-							};
-							_timer.schedule(reporttimer, (int)(1000));
+				if (timecnt < 0) {
+					showMessage("No remaining time");
+				}
+				else {
+					count++;
+					cntview.setText(String.valueOf((long)(count)));
+					_checkanswer();
+				}
 			}
 		});
 		clearbutton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View _v) { 
 				count = 0;
+				timecnt = 0;
+					reporttimer.cancel();
 				cntview.setText(String.valueOf((long)(count)));
 				_initscore();
+				_newproblem();
+			}
+		});
+		nextbutton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+					reporttimer.cancel();
 				_newproblem();
 			}
 		});
@@ -128,8 +144,7 @@ public class MainActivity extends Activity {
 
 
 	private void _newproblem () {
-		_updatemode();
-		_updatelevel();
+		_updatesetting();
 		value1 = getRandom((int)(2), (int)(maxnum));
 		value2 = getRandom((int)(2), (int)(value1));
 		if (operation == 1) {
@@ -155,6 +170,10 @@ public class MainActivity extends Activity {
 		value1view.setText(String.valueOf((long)(value1)));
 		value2view.setText(String.valueOf((long)(value2)));
 		_clearanswerreport();
+		_runtimecounter();
+		answeredit.setVisibility(View.VISIBLE);
+		resulttext.setBackgroundColor(Color.TRANSPARENT);
+		answerview.setBackgroundColor(Color.TRANSPARENT);
 	}
 	private void _initscore () {
 		score = 0;
@@ -177,6 +196,7 @@ public class MainActivity extends Activity {
 			iscorrect = false;
 			_updatescore(-1);
 			showMessage("Try again!");
+			answeredit.setVisibility(View.INVISIBLE);
 		}
 		_updateanswerreport();
 	}
@@ -198,10 +218,13 @@ public class MainActivity extends Activity {
 		if (iscorrect) {
 			resulttext.setText("Correct");
 			answerview.setText("");
+			resulttext.setBackgroundColor(0xFFFFC107);
 		}
 		else {
 			resulttext.setText("Answer is");
 			answerview.setText(String.valueOf((long)(answer)));
+			resulttext.setBackgroundColor(0xFFFFC107);
+			answerview.setBackgroundColor(0xFFFFC107);
 		}
 	}
 	private void _clearanswerreport () {
@@ -232,6 +255,36 @@ public class MainActivity extends Activity {
 				}
 			}
 		}
+	}
+	private void _runtimecounter () {
+		_updatetime();
+		timecnt = maxtime;
+		timeview.setText(String.valueOf((long)(timecnt)));
+		reporttimer = new TimerTask() {
+					@Override
+						public void run() {
+							runOnUiThread(new Runnable() {
+							@Override
+								public void run() {
+										timecnt--;
+								timeview.setText(String.valueOf((long)(timecnt)));
+								if (timecnt < 0) {
+										reporttimer.cancel();
+									answeredit.setVisibility(View.INVISIBLE);
+								}
+								}
+							});
+						}
+					};
+					_timer.scheduleAtFixedRate(reporttimer, (int)(0), (int)(1000));
+	}
+	private void _updatetime () {
+		maxtime = Double.parseDouble(maxtimeedit.getText().toString());
+	}
+	private void _updatesetting () {
+		_updatemode();
+		_updatelevel();
+		_updatetime();
 	}
 
 
