@@ -57,6 +57,7 @@ public class MainActivity extends Activity {
 	private double operation = 0;
 	private double timecnt = 0;
 	private double maxtime = 0;
+	private boolean isreadysubmit;
 
 
 	private Timer _timer = new Timer();
@@ -109,9 +110,12 @@ public class MainActivity extends Activity {
 					showMessage("No remaining time");
 				}
 				else {
-					count++;
-					cntview.setText(String.valueOf((long)(count)));
-					_checkanswer();
+					if (isreadysubmit) {
+						count++;
+						cntview.setText(String.valueOf((long)(count)));
+						_checkanswer();
+						isreadysubmit = false;
+					}
 				}
 			}
 		});
@@ -120,6 +124,7 @@ public class MainActivity extends Activity {
 			public void onClick(View _v) { 
 				count = 0;
 				timecnt = 0;
+				isreadysubmit = true;
 					reporttimer.cancel();
 				cntview.setText(String.valueOf((long)(count)));
 				_initscore();
@@ -130,6 +135,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View _v) { 
 					reporttimer.cancel();
+				isreadysubmit = true;
 				_newproblem();
 			}
 		});
