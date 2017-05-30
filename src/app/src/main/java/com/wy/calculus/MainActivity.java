@@ -58,6 +58,7 @@ public class MainActivity extends Activity {
 	private double timecnt = 0;
 	private double maxtime = 0;
 	private boolean isreadysubmit;
+	private double useranswer = 0;
 
 
 	private Timer _timer = new Timer();
@@ -134,9 +135,11 @@ public class MainActivity extends Activity {
 		nextbutton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View _v) { 
-					reporttimer.cancel();
-				isreadysubmit = true;
-				_newproblem();
+				if (!isreadysubmit || (isreadysubmit && (timecnt < 0))) {
+						reporttimer.cancel();
+					isreadysubmit = true;
+					_newproblem();
+				}
 			}
 		});
 
@@ -145,6 +148,7 @@ public class MainActivity extends Activity {
 	private void  initializeLogic() {
 		score = 0;
 		count = 0;
+		isreadysubmit = true;
 		_newproblem();
 	}
 
@@ -193,7 +197,13 @@ public class MainActivity extends Activity {
 		scoreview.setText(String.valueOf((long)(score)));
 	}
 	private void _checkanswer () {
-		if (Double.parseDouble(answeredit.getText().toString()) == answer) {
+		if (answeredit.getText().toString().equals("")) {
+			useranswer = 0;
+		}
+		else {
+			useranswer = Double.parseDouble(answeredit.getText().toString());
+		}
+		if (useranswer == answer) {
 			iscorrect = true;
 			_updatescore(1);
 			showMessage("Excellent!");
@@ -202,7 +212,6 @@ public class MainActivity extends Activity {
 			iscorrect = false;
 			_updatescore(-1);
 			showMessage("Try again!");
-			answeredit.setVisibility(View.INVISIBLE);
 		}
 		_updateanswerreport();
 	}
@@ -276,7 +285,6 @@ public class MainActivity extends Activity {
 								timeview.setText(String.valueOf((long)(timecnt)));
 								if (timecnt < 0) {
 										reporttimer.cancel();
-									answeredit.setVisibility(View.INVISIBLE);
 								}
 								}
 							});
