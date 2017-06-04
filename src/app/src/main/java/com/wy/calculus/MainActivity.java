@@ -33,6 +33,7 @@ public class MainActivity extends Activity {
 	private Button nextbutton;
 	private Button submitbutton;
 	private Button clearbutton;
+	private Button buttonhelp;
 	private TextView scoretext;
 	private TextView scoreview;
 	private TextView cnttext;
@@ -63,6 +64,7 @@ public class MainActivity extends Activity {
 
 	private Timer _timer = new Timer();
 	private TimerTask reporttimer;
+	private Intent intentcodes = new Intent();
 
 
 	@Override
@@ -89,6 +91,7 @@ public class MainActivity extends Activity {
 		nextbutton = (Button) findViewById(R.id.nextbutton);
 		submitbutton = (Button) findViewById(R.id.submitbutton);
 		clearbutton = (Button) findViewById(R.id.clearbutton);
+		buttonhelp = (Button) findViewById(R.id.buttonhelp);
 		scoretext = (TextView) findViewById(R.id.scoretext);
 		scoreview = (TextView) findViewById(R.id.scoreview);
 		cnttext = (TextView) findViewById(R.id.cnttext);
@@ -101,6 +104,7 @@ public class MainActivity extends Activity {
 		modeedit = (EditText) findViewById(R.id.modeedit);
 		maxtimetext = (TextView) findViewById(R.id.maxtimetext);
 		maxtimeedit = (EditText) findViewById(R.id.maxtimeedit);
+
 
 
 
@@ -140,6 +144,14 @@ public class MainActivity extends Activity {
 					isreadysubmit = true;
 					_newproblem();
 				}
+			}
+		});
+		buttonhelp.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				intentcodes.setAction(Intent.ACTION_VIEW);
+				intentcodes.setData(Uri.parse("http://calculusquiz.weebly.com"));
+				startActivity(intentcodes);
 			}
 		});
 
