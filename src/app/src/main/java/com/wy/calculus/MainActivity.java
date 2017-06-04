@@ -248,7 +248,7 @@ public class MainActivity extends Activity {
 			resulttext.setBackgroundColor(0xFFFFC107);
 		}
 		else {
-			resulttext.setText("Answer is");
+			resulttext.setText("Answer");
 			answerview.setText(String.valueOf((long)(answer)));
 			resulttext.setBackgroundColor(0xFFFFC107);
 			answerview.setBackgroundColor(0xFFFFC107);
