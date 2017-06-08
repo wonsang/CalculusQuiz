@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
 	private LinearLayout linear2;
 	private LinearLayout linear3;
 	private LinearLayout linear4;
-	private LinearLayout linear5;
+	private LinearLayout linear6;
 	private TextView value1view;
 	private TextView operatorview;
 	private TextView value2view;
@@ -42,10 +42,9 @@ public class MainActivity extends Activity {
 	private TextView timeview;
 	private TextView leveltext;
 	private EditText levelview;
-	private TextView modetext;
-	private EditText modeedit;
 	private TextView maxtimetext;
 	private EditText maxtimeedit;
+	private ListView listview_mode;
 
 	private double value1 = 0;
 	private double value2 = 0;
@@ -61,6 +60,7 @@ public class MainActivity extends Activity {
 	private boolean isreadysubmit;
 	private double useranswer = 0;
 
+	private ArrayList<String> mode = new ArrayList<String>();
 
 	private Timer _timer = new Timer();
 	private TimerTask reporttimer;
@@ -80,7 +80,7 @@ public class MainActivity extends Activity {
 		linear2 = (LinearLayout) findViewById(R.id.linear2);
 		linear3 = (LinearLayout) findViewById(R.id.linear3);
 		linear4 = (LinearLayout) findViewById(R.id.linear4);
-		linear5 = (LinearLayout) findViewById(R.id.linear5);
+		linear6 = (LinearLayout) findViewById(R.id.linear6);
 		value1view = (TextView) findViewById(R.id.value1view);
 		operatorview = (TextView) findViewById(R.id.operatorview);
 		value2view = (TextView) findViewById(R.id.value2view);
@@ -100,10 +100,9 @@ public class MainActivity extends Activity {
 		timeview = (TextView) findViewById(R.id.timeview);
 		leveltext = (TextView) findViewById(R.id.leveltext);
 		levelview = (EditText) findViewById(R.id.levelview);
-		modetext = (TextView) findViewById(R.id.modetext);
-		modeedit = (EditText) findViewById(R.id.modeedit);
 		maxtimetext = (TextView) findViewById(R.id.maxtimetext);
 		maxtimeedit = (EditText) findViewById(R.id.maxtimeedit);
+		listview_mode = (ListView) findViewById(R.id.listview_mode);
 
 
 
@@ -161,6 +160,7 @@ public class MainActivity extends Activity {
 		score = 0;
 		count = 0;
 		isreadysubmit = true;
+		_initmode();
 		_newproblem();
 	}
 
@@ -261,19 +261,20 @@ public class MainActivity extends Activity {
 		iscorrect = false;
 	}
 	private void _updatemode () {
-		if (modeedit.getText().toString().equals("rand")) {
+		((ArrayAdapter)listview_mode.getAdapter()).notifyDataSetChanged();
+		if (listview_mode.getCheckedItemPosition() == 0) {
 			operation = getRandom((int)(1), (int)(4));
 		}
 		else {
-			if (modeedit.getText().toString().equals("add")) {
+			if (listview_mode.getCheckedItemPosition() == 1) {
 				operation = 1;
 			}
 			else {
-				if (modeedit.getText().toString().equals("sub")) {
+				if (listview_mode.getCheckedItemPosition() == 2) {
 					operation = 2;
 				}
 				else {
-					if (modeedit.getText().toString().equals("mult")) {
+					if (listview_mode.getCheckedItemPosition() == 3) {
 						operation = 3;
 					}
 					else {
@@ -311,6 +312,16 @@ public class MainActivity extends Activity {
 		_updatemode();
 		_updatelevel();
 		_updatetime();
+	}
+	private void _initmode () {
+		mode.add("Random");
+		mode.add("Addition");
+		mode.add("Subtraction");
+		mode.add("Multiplication");
+		mode.add("Division");
+		listview_mode.setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_single_choice, mode));
+		listview_mode.setItemChecked((int)(0), true);
+		((ArrayAdapter)listview_mode.getAdapter()).notifyDataSetChanged();
 	}
 
 
