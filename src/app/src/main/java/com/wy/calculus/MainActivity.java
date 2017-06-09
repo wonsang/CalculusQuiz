@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
 	private LinearLayout linear3;
 	private LinearLayout linear4;
 	private LinearLayout linear6;
+	private LinearLayout linear8;
 	private TextView value1view;
 	private TextView operatorview;
 	private TextView value2view;
@@ -33,18 +34,20 @@ public class MainActivity extends Activity {
 	private Button nextbutton;
 	private Button submitbutton;
 	private Button clearbutton;
-	private Button buttonhelp;
 	private TextView scoretext;
 	private TextView scoreview;
 	private TextView cnttext;
 	private TextView cntview;
 	private TextView timetext;
 	private TextView timeview;
+	private TextView modetext;
+	private TextView textviewmode;
 	private TextView leveltext;
-	private EditText levelview;
+	private TextView textview_level;
 	private TextView maxtimetext;
-	private EditText maxtimeedit;
-	private ListView listview_mode;
+	private TextView textview_maxtime;
+	private Button settingbutton;
+	private Button buttonhelp;
 
 	private double value1 = 0;
 	private double value2 = 0;
@@ -59,12 +62,15 @@ public class MainActivity extends Activity {
 	private double maxtime = 0;
 	private boolean isreadysubmit;
 	private double useranswer = 0;
+	private double opmode = 0;
 
 	private ArrayList<String> mode = new ArrayList<String>();
 
 	private Timer _timer = new Timer();
 	private TimerTask reporttimer;
 	private Intent intentcodes = new Intent();
+	private SharedPreferences config;
+	private Intent settingintent = new Intent();
 
 
 	@Override
@@ -81,6 +87,7 @@ public class MainActivity extends Activity {
 		linear3 = (LinearLayout) findViewById(R.id.linear3);
 		linear4 = (LinearLayout) findViewById(R.id.linear4);
 		linear6 = (LinearLayout) findViewById(R.id.linear6);
+		linear8 = (LinearLayout) findViewById(R.id.linear8);
 		value1view = (TextView) findViewById(R.id.value1view);
 		operatorview = (TextView) findViewById(R.id.operatorview);
 		value2view = (TextView) findViewById(R.id.value2view);
@@ -91,20 +98,24 @@ public class MainActivity extends Activity {
 		nextbutton = (Button) findViewById(R.id.nextbutton);
 		submitbutton = (Button) findViewById(R.id.submitbutton);
 		clearbutton = (Button) findViewById(R.id.clearbutton);
-		buttonhelp = (Button) findViewById(R.id.buttonhelp);
 		scoretext = (TextView) findViewById(R.id.scoretext);
 		scoreview = (TextView) findViewById(R.id.scoreview);
 		cnttext = (TextView) findViewById(R.id.cnttext);
 		cntview = (TextView) findViewById(R.id.cntview);
 		timetext = (TextView) findViewById(R.id.timetext);
 		timeview = (TextView) findViewById(R.id.timeview);
+		modetext = (TextView) findViewById(R.id.modetext);
+		textviewmode = (TextView) findViewById(R.id.textviewmode);
 		leveltext = (TextView) findViewById(R.id.leveltext);
-		levelview = (EditText) findViewById(R.id.levelview);
+		textview_level = (TextView) findViewById(R.id.textview_level);
 		maxtimetext = (TextView) findViewById(R.id.maxtimetext);
-		maxtimeedit = (EditText) findViewById(R.id.maxtimeedit);
-		listview_mode = (ListView) findViewById(R.id.listview_mode);
+		textview_maxtime = (TextView) findViewById(R.id.textview_maxtime);
+		settingbutton = (Button) findViewById(R.id.settingbutton);
+		buttonhelp = (Button) findViewById(R.id.buttonhelp);
 
 
+
+		config = getSharedPreferences("config", Activity.MODE_PRIVATE);
 
 
 		submitbutton.setOnClickListener(new View.OnClickListener() {
@@ -129,7 +140,9 @@ public class MainActivity extends Activity {
 				count = 0;
 				timecnt = 0;
 				isreadysubmit = true;
-					reporttimer.cancel();
+				if (0 < maxtime) {
+						reporttimer.cancel();
+				}
 				cntview.setText(String.valueOf((long)(count)));
 				_initscore();
 				_newproblem();
@@ -139,7 +152,9 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View _v) { 
 				if (!isreadysubmit || (isreadysubmit && (timecnt < 0))) {
-						reporttimer.cancel();
+					if (0 < maxtime) {
+							reporttimer.cancel();
+					}
 					isreadysubmit = true;
 					_newproblem();
 				}
@@ -153,6 +168,13 @@ public class MainActivity extends Activity {
 				startActivity(intentcodes);
 			}
 		});
+		settingbutton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				settingintent.setClass(getApplicationContext(), SettingActivity.class);
+				startActivity(settingintent);
+			}
+		});
 
 	}
 
@@ -160,7 +182,7 @@ public class MainActivity extends Activity {
 		score = 0;
 		count = 0;
 		isreadysubmit = true;
-		_initmode();
+		_updatesetting();
 		_newproblem();
 	}
 
@@ -228,16 +250,18 @@ public class MainActivity extends Activity {
 		_updateanswerreport();
 	}
 	private void _updatelevel () {
-		level = Double.parseDouble(levelview.getText().toString());
 		if (level == 1) {
 			maxnum = 9;
+			textview_level.setText("beginner");
 		}
 		else {
 			if (level == 2) {
 				maxnum = 20;
+				textview_level.setText("medium");
 			}
 			else {
 				maxnum = 99;
+				textview_level.setText("advanced");
 			}
 		}
 	}
@@ -261,67 +285,80 @@ public class MainActivity extends Activity {
 		iscorrect = false;
 	}
 	private void _updatemode () {
-		((ArrayAdapter)listview_mode.getAdapter()).notifyDataSetChanged();
-		if (listview_mode.getCheckedItemPosition() == 0) {
+		if (opmode == 0) {
 			operation = getRandom((int)(1), (int)(4));
+			textviewmode.setText("random");
 		}
 		else {
-			if (listview_mode.getCheckedItemPosition() == 1) {
+			if (opmode == 1) {
 				operation = 1;
+				textviewmode.setText("addition");
 			}
 			else {
-				if (listview_mode.getCheckedItemPosition() == 2) {
+				if (opmode == 2) {
 					operation = 2;
+					textviewmode.setText("subtraction");
 				}
 				else {
-					if (listview_mode.getCheckedItemPosition() == 3) {
+					if (opmode == 3) {
 						operation = 3;
+						textviewmode.setText("multiplication");
 					}
 					else {
 						operation = 4;
+						textviewmode.setText("division");
 					}
 				}
 			}
 		}
 	}
 	private void _runtimecounter () {
-		_updatetime();
-		timecnt = maxtime;
-		timeview.setText(String.valueOf((long)(timecnt)));
-		reporttimer = new TimerTask() {
-					@Override
-						public void run() {
-							runOnUiThread(new Runnable() {
-							@Override
-								public void run() {
-										timecnt--;
-								timeview.setText(String.valueOf((long)(timecnt)));
-								if (timecnt < 0) {
-										reporttimer.cancel();
-								}
-								}
-							});
-						}
-					};
-					_timer.scheduleAtFixedRate(reporttimer, (int)(0), (int)(1000));
-	}
-	private void _updatetime () {
-		maxtime = Double.parseDouble(maxtimeedit.getText().toString());
+		if (maxtime > 0) {
+			timecnt = maxtime;
+			timeview.setText(String.valueOf((long)(timecnt)));
+			reporttimer = new TimerTask() {
+						@Override
+							public void run() {
+								runOnUiThread(new Runnable() {
+								@Override
+									public void run() {
+												timecnt--;
+									timeview.setText(String.valueOf((long)(timecnt)));
+									if (timecnt < 0) {
+											reporttimer.cancel();
+									}
+									}
+								});
+							}
+						};
+						_timer.scheduleAtFixedRate(reporttimer, (int)(0), (int)(1000));
+		}
 	}
 	private void _updatesetting () {
+		_getconfig();
 		_updatemode();
 		_updatelevel();
-		_updatetime();
+		textview_maxtime.setText(String.valueOf((long)(maxtime)));
 	}
-	private void _initmode () {
-		mode.add("Random");
-		mode.add("Addition");
-		mode.add("Subtraction");
-		mode.add("Multiplication");
-		mode.add("Division");
-		listview_mode.setAdapter(new ArrayAdapter<String>(getBaseContext(), android.R.layout.simple_list_item_single_choice, mode));
-		listview_mode.setItemChecked((int)(0), true);
-		((ArrayAdapter)listview_mode.getAdapter()).notifyDataSetChanged();
+	private void _getconfig () {
+		if (config.getString("mode", "").length() == 0) {
+			opmode = 0;
+		}
+		else {
+			opmode = Double.parseDouble(config.getString("mode", ""));
+		}
+		if (config.getString("level", "").length() == 0) {
+			level = 1;
+		}
+		else {
+			level = Double.parseDouble(config.getString("level", ""));
+		}
+		if (config.getString("maxtime", "").length() == 0) {
+			maxtime = 10;
+		}
+		else {
+			maxtime = Double.parseDouble(config.getString("maxtime", ""));
+		}
 	}
 
 
