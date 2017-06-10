@@ -46,6 +46,13 @@ public class MainActivity extends Activity {
 	private TextView textview_level;
 	private TextView maxtimetext;
 	private TextView textview_maxtime;
+	private TextView ranktext;
+	private TextView usertext1;
+	private TextView userscore1;
+	private TextView usertext2;
+	private TextView userscore2;
+	private TextView usertext3;
+	private TextView userscore3;
 	private Button settingbutton;
 	private Button buttonhelp;
 
@@ -63,8 +70,11 @@ public class MainActivity extends Activity {
 	private boolean isreadysubmit;
 	private double useranswer = 0;
 	private double opmode = 0;
+	private String username = "";
+	private double delta = 0;
 
-	private ArrayList<String> mode = new ArrayList<String>();
+	private ArrayList<String> rankusers = new ArrayList<String>();
+	private ArrayList<Double> rankscores = new ArrayList<Double>();
 
 	private Timer _timer = new Timer();
 	private TimerTask reporttimer;
@@ -110,6 +120,13 @@ public class MainActivity extends Activity {
 		textview_level = (TextView) findViewById(R.id.textview_level);
 		maxtimetext = (TextView) findViewById(R.id.maxtimetext);
 		textview_maxtime = (TextView) findViewById(R.id.textview_maxtime);
+		ranktext = (TextView) findViewById(R.id.ranktext);
+		usertext1 = (TextView) findViewById(R.id.usertext1);
+		userscore1 = (TextView) findViewById(R.id.userscore1);
+		usertext2 = (TextView) findViewById(R.id.usertext2);
+		userscore2 = (TextView) findViewById(R.id.userscore2);
+		usertext3 = (TextView) findViewById(R.id.usertext3);
+		userscore3 = (TextView) findViewById(R.id.userscore3);
 		settingbutton = (Button) findViewById(R.id.settingbutton);
 		buttonhelp = (Button) findViewById(R.id.buttonhelp);
 
@@ -231,6 +248,13 @@ public class MainActivity extends Activity {
 		scoreview.setText(String.valueOf((long)(score)));
 	}
 	private void _checkanswer () {
+		delta = 1;
+		if (2 < operation) {
+			delta = 2;
+		}
+		if (1 < level) {
+			delta = delta * (level * 2);
+		}
 		if (answeredit.getText().toString().equals("")) {
 			useranswer = 0;
 		}
@@ -239,12 +263,12 @@ public class MainActivity extends Activity {
 		}
 		if (useranswer == answer) {
 			iscorrect = true;
-			_updatescore(1);
+			_updatescore(delta);
 			showMessage("Excellent!");
 		}
 		else {
 			iscorrect = false;
-			_updatescore(-1);
+			_updatescore(0 - delta);
 			showMessage("Try again!");
 		}
 		_updateanswerreport();
@@ -338,6 +362,7 @@ public class MainActivity extends Activity {
 		_getconfig();
 		_updatemode();
 		_updatelevel();
+		_updaterank();
 		textview_maxtime.setText(String.valueOf((long)(maxtime)));
 	}
 	private void _getconfig () {
@@ -359,6 +384,79 @@ public class MainActivity extends Activity {
 		else {
 			maxtime = Double.parseDouble(config.getString("maxtime", ""));
 		}
+		if (config.getString("username", "").length() == 0) {
+			username = "Unknown";
+		}
+		else {
+			username = config.getString("username", "");
+		}
+	}
+	private void _updaterank () {
+		rankusers.clear();
+		if (config.getString("rankuser1", "").length() == 0) {
+			rankusers.add("Unknown");
+			rankscores.add(Double.valueOf(Double.parseDouble("0")));
+		}
+		else {
+			rankusers.add(config.getString("rankuser1", ""));
+			rankscores.add(Double.valueOf(Double.parseDouble(config.getString("rankscore1", ""))));
+		}
+		if (config.getString("rankuser2", "").length() == 0) {
+			rankusers.add("Unknown");
+			rankscores.add(Double.valueOf(Double.parseDouble("0")));
+		}
+		else {
+			rankusers.add(config.getString("rankuser2", ""));
+			rankscores.add(Double.valueOf(Double.parseDouble(config.getString("rankscore2", ""))));
+		}
+		if (config.getString("rankuser3", "").length() == 0) {
+			rankusers.add("Unknown");
+			rankscores.add(Double.valueOf(Double.parseDouble("0")));
+		}
+		else {
+			rankusers.add(config.getString("rankuser3", ""));
+			rankscores.add(Double.valueOf(Double.parseDouble(config.getString("rankscore3", ""))));
+		}
+		if (rankscores.get((int)(0)).doubleValue() < score) {
+			if (username.equals(rankusers.get((int)(0)))) {
+				rankusers.remove((int)(0));
+				rankscores.remove((int)(0));
+			}
+			rankusers.add((int)(0), username);
+			rankscores.add((int)(0), Double.valueOf(score));
+		}
+		else {
+			if (rankscores.get((int)(1)).doubleValue() < score) {
+				if (username.equals(rankusers.get((int)(1)))) {
+					rankusers.remove((int)(1));
+					rankscores.remove((int)(1));
+				}
+				rankusers.add((int)(1), username);
+				rankscores.add((int)(1), Double.valueOf(score));
+			}
+			else {
+				if (rankscores.get((int)(2)).doubleValue() < score) {
+					if (username.equals(rankusers.get((int)(2)))) {
+						rankusers.remove((int)(2));
+						rankscores.remove((int)(2));
+					}
+					rankusers.add((int)(2), username);
+					rankscores.add((int)(2), Double.valueOf(score));
+				}
+			}
+		}
+		usertext1.setText(rankusers.get((int)(0)));
+		userscore1.setText(String.valueOf((long)(rankscores.get((int)(0)).doubleValue())));
+		config.edit().putString("rankuser1", rankusers.get((int)(0))).commit();
+		config.edit().putString("rankscore1", String.valueOf((long)(rankscores.get((int)(0)).doubleValue()))).commit();
+		usertext2.setText(rankusers.get((int)(1)));
+		userscore2.setText(String.valueOf((long)(rankscores.get((int)(1)).doubleValue())));
+		config.edit().putString("rankuser2", rankusers.get((int)(1))).commit();
+		config.edit().putString("rankscore2", String.valueOf((long)(rankscores.get((int)(1)).doubleValue()))).commit();
+		usertext3.setText(rankusers.get((int)(2)));
+		userscore3.setText(String.valueOf((long)(rankscores.get((int)(2)).doubleValue())));
+		config.edit().putString("rankuser3", rankusers.get((int)(2))).commit();
+		config.edit().putString("rankscore3", String.valueOf((long)(rankscores.get((int)(2)).doubleValue()))).commit();
 	}
 
 

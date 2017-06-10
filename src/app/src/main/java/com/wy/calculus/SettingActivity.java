@@ -22,12 +22,15 @@ public class SettingActivity extends Activity {
 	private LinearLayout linear2;
 	private LinearLayout linear3;
 	private LinearLayout linear4;
+	private LinearLayout linear5;
 	private TextView textview_mode;
 	private Spinner spinner_mode;
 	private TextView textview_level;
 	private Spinner spinner_level;
 	private CheckBox checkbox_timelimit;
 	private Spinner spinner_maxtime;
+	private TextView usertext;
+	private EditText useredit;
 	private Button button_close;
 	private Button button_save;
 
@@ -56,12 +59,15 @@ public class SettingActivity extends Activity {
 		linear2 = (LinearLayout) findViewById(R.id.linear2);
 		linear3 = (LinearLayout) findViewById(R.id.linear3);
 		linear4 = (LinearLayout) findViewById(R.id.linear4);
+		linear5 = (LinearLayout) findViewById(R.id.linear5);
 		textview_mode = (TextView) findViewById(R.id.textview_mode);
 		spinner_mode = (Spinner) findViewById(R.id.spinner_mode);
 		textview_level = (TextView) findViewById(R.id.textview_level);
 		spinner_level = (Spinner) findViewById(R.id.spinner_level);
 		checkbox_timelimit = (CheckBox) findViewById(R.id.checkbox_timelimit);
 		spinner_maxtime = (Spinner) findViewById(R.id.spinner_maxtime);
+		usertext = (TextView) findViewById(R.id.usertext);
+		useredit = (EditText) findViewById(R.id.useredit);
 		button_close = (Button) findViewById(R.id.button_close);
 		button_save = (Button) findViewById(R.id.button_save);
 
@@ -89,6 +95,7 @@ public class SettingActivity extends Activity {
 					maxtime = 0;
 				}
 				config.edit().putString("maxtime", String.valueOf((long)(maxtime))).commit();
+				config.edit().putString("username", useredit.getText().toString()).commit();
 				mainintent.setClass(getApplicationContext(), MainActivity.class);
 				startActivity(mainintent);
 			}
@@ -141,6 +148,12 @@ public class SettingActivity extends Activity {
 		}
 		else {
 			checkbox_timelimit.setChecked(true);
+		}
+		if (config.getString("username", "").length() == 0) {
+			useredit.setText("Unknown");
+		}
+		else {
+			useredit.setText(config.getString("username", ""));
 		}
 	}
 

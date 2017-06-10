@@ -128,6 +128,7 @@
 			android:padding="8dp"
 			android:text="Score"
 			android:textSize="12sp"
+			android:textStyle="bold"
 			android:textColor="#000000"
 			/>
 		<TextView
@@ -146,6 +147,7 @@
 			android:padding="8dp"
 			android:text="Count"
 			android:textSize="12sp"
+			android:textStyle="bold"
 			android:textColor="#000000"
 			/>
 		<TextView
@@ -164,6 +166,7 @@
 			android:padding="8dp"
 			android:text="Remaining time"
 			android:textSize="12sp"
+			android:textStyle="bold"
 			android:textColor="#000000"
 			/>
 		<TextView
@@ -190,6 +193,7 @@
 			android:padding="8dp"
 			android:text="Mode"
 			android:textSize="12sp"
+			android:textStyle="bold"
 			android:textColor="#000000"
 			/>
 		<TextView
@@ -207,6 +211,7 @@
 			android:padding="8dp"
 			android:text="Level"
 			android:textSize="12sp"
+			android:textStyle="bold"
 			android:textColor="#000000"
 			/>
 		<TextView
@@ -224,6 +229,7 @@
 			android:padding="8dp"
 			android:text="Max time"
 			android:textSize="12sp"
+			android:textStyle="bold"
 			android:textColor="#000000"
 			/>
 		<TextView
@@ -242,6 +248,70 @@
 		android:padding="8dp"
 		android:orientation="horizontal"
 		>
+		<TextView
+			android:id="@+id/ranktext"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="8dp"
+			android:text="Rank"
+			android:textSize="12sp"
+			android:textStyle="bold"
+			android:textColor="#000000"
+			/>
+		<TextView
+			android:id="@+id/usertext1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="8dp"
+			android:text="Unknown"
+			android:textSize="12sp"
+			android:textColor="#000000"
+			/>
+		<TextView
+			android:id="@+id/userscore1"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="8dp"
+			android:text="0"
+			android:textSize="12sp"
+			android:textColor="#000000"
+			/>
+		<TextView
+			android:id="@+id/usertext2"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="8dp"
+			android:text="Unknown"
+			android:textSize="12sp"
+			android:textColor="#000000"
+			/>
+		<TextView
+			android:id="@+id/userscore2"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="8dp"
+			android:text="0"
+			android:textSize="12sp"
+			android:textColor="#000000"
+			/>
+		<TextView
+			android:id="@+id/usertext3"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="8dp"
+			android:text="Unknown"
+			android:textSize="12sp"
+			android:textColor="#000000"
+			/>
+		<TextView
+			android:id="@+id/userscore3"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:padding="8dp"
+			android:text="0"
+			android:textSize="12sp"
+			android:textColor="#000000"
+			/>
 	</LinearLayout>
 	<LinearLayout
 		android:id="@+id/linear8"
