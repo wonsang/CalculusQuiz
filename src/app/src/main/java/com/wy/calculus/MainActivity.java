@@ -24,6 +24,8 @@ public class MainActivity extends Activity {
 	private LinearLayout linear4;
 	private LinearLayout linear6;
 	private LinearLayout linear8;
+	private LinearLayout linear9;
+	private LinearLayout linear10;
 	private TextView value1view;
 	private TextView operatorview;
 	private TextView value2view;
@@ -34,6 +36,17 @@ public class MainActivity extends Activity {
 	private Button nextbutton;
 	private Button submitbutton;
 	private Button clearbutton;
+	private Button button1;
+	private Button button2;
+	private Button button3;
+	private Button button4;
+	private Button button5;
+	private Button button6;
+	private Button button7;
+	private Button button8;
+	private Button button9;
+	private Button button0;
+	private Button backbutton;
 	private TextView scoretext;
 	private TextView scoreview;
 	private TextView cnttext;
@@ -55,6 +68,7 @@ public class MainActivity extends Activity {
 	private TextView userscore3;
 	private Button settingbutton;
 	private Button buttonhelp;
+	private Button aboutbutton;
 
 	private double value1 = 0;
 	private double value2 = 0;
@@ -98,6 +112,8 @@ public class MainActivity extends Activity {
 		linear4 = (LinearLayout) findViewById(R.id.linear4);
 		linear6 = (LinearLayout) findViewById(R.id.linear6);
 		linear8 = (LinearLayout) findViewById(R.id.linear8);
+		linear9 = (LinearLayout) findViewById(R.id.linear9);
+		linear10 = (LinearLayout) findViewById(R.id.linear10);
 		value1view = (TextView) findViewById(R.id.value1view);
 		operatorview = (TextView) findViewById(R.id.operatorview);
 		value2view = (TextView) findViewById(R.id.value2view);
@@ -108,6 +124,17 @@ public class MainActivity extends Activity {
 		nextbutton = (Button) findViewById(R.id.nextbutton);
 		submitbutton = (Button) findViewById(R.id.submitbutton);
 		clearbutton = (Button) findViewById(R.id.clearbutton);
+		button1 = (Button) findViewById(R.id.button1);
+		button2 = (Button) findViewById(R.id.button2);
+		button3 = (Button) findViewById(R.id.button3);
+		button4 = (Button) findViewById(R.id.button4);
+		button5 = (Button) findViewById(R.id.button5);
+		button6 = (Button) findViewById(R.id.button6);
+		button7 = (Button) findViewById(R.id.button7);
+		button8 = (Button) findViewById(R.id.button8);
+		button9 = (Button) findViewById(R.id.button9);
+		button0 = (Button) findViewById(R.id.button0);
+		backbutton = (Button) findViewById(R.id.backbutton);
 		scoretext = (TextView) findViewById(R.id.scoretext);
 		scoreview = (TextView) findViewById(R.id.scoreview);
 		cnttext = (TextView) findViewById(R.id.cnttext);
@@ -129,6 +156,7 @@ public class MainActivity extends Activity {
 		userscore3 = (TextView) findViewById(R.id.userscore3);
 		settingbutton = (Button) findViewById(R.id.settingbutton);
 		buttonhelp = (Button) findViewById(R.id.buttonhelp);
+		aboutbutton = (Button) findViewById(R.id.aboutbutton);
 
 
 
@@ -181,7 +209,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View _v) { 
 				intentcodes.setAction(Intent.ACTION_VIEW);
-				intentcodes.setData(Uri.parse("http://calculusquiz.weebly.com"));
+				intentcodes.setData(Uri.parse("http://calculusquiz.weebly.com/tutorial.html"));
 				startActivity(intentcodes);
 			}
 		});
@@ -190,6 +218,85 @@ public class MainActivity extends Activity {
 			public void onClick(View _v) { 
 				settingintent.setClass(getApplicationContext(), SettingActivity.class);
 				startActivity(settingintent);
+			}
+		});
+		aboutbutton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				intentcodes.setAction(Intent.ACTION_VIEW);
+				intentcodes.setData(Uri.parse("http://calculusquiz.weebly.com"));
+				startActivity(intentcodes);
+			}
+		});
+		button1.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				_displaynumber(1);
+			}
+		});
+		button2.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				_displaynumber(2);
+			}
+		});
+		button3.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				_displaynumber(3);
+			}
+		});
+		button4.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				_displaynumber(4);
+			}
+		});
+		button5.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				_displaynumber(5);
+			}
+		});
+		button6.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				_displaynumber(6);
+			}
+		});
+		button7.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				_displaynumber(7);
+			}
+		});
+		button8.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				_displaynumber(8);
+			}
+		});
+		button9.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				_displaynumber(9);
+			}
+		});
+		button0.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				_displaynumber(0);
+			}
+		});
+		backbutton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				if (answeredit.getText().toString().length() == 0) {
+					answeredit.setText("");
+				}
+				else {
+					answeredit.setText(String.valueOf((long)(Double.parseDouble(answeredit.getText().toString()) / 10)));
+				}
 			}
 		});
 
@@ -457,6 +564,14 @@ public class MainActivity extends Activity {
 		userscore3.setText(String.valueOf((long)(rankscores.get((int)(2)).doubleValue())));
 		config.edit().putString("rankuser3", rankusers.get((int)(2))).commit();
 		config.edit().putString("rankscore3", String.valueOf((long)(rankscores.get((int)(2)).doubleValue()))).commit();
+	}
+	private void _displaynumber (final double _num) {
+		if (answeredit.getText().toString().length() == 0) {
+			answeredit.setText(String.valueOf((long)(_num)));
+		}
+		else {
+			answeredit.setText(String.valueOf((long)((Double.parseDouble(answeredit.getText().toString()) * 10) + _num)));
+		}
 	}
 
 
