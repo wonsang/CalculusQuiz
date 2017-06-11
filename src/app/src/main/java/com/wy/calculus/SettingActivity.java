@@ -33,6 +33,7 @@ public class SettingActivity extends Activity {
 	private EditText useredit;
 	private Button button_close;
 	private Button button_save;
+	private Button button_default;
 
 	private double mode = 0;
 	private double level = 0;
@@ -70,6 +71,7 @@ public class SettingActivity extends Activity {
 		useredit = (EditText) findViewById(R.id.useredit);
 		button_close = (Button) findViewById(R.id.button_close);
 		button_save = (Button) findViewById(R.id.button_save);
+		button_default = (Button) findViewById(R.id.button_default);
 
 		config = getSharedPreferences("config", Activity.MODE_PRIVATE);
 
@@ -98,6 +100,16 @@ public class SettingActivity extends Activity {
 				config.edit().putString("username", useredit.getText().toString()).commit();
 				mainintent.setClass(getApplicationContext(), MainActivity.class);
 				startActivity(mainintent);
+			}
+		});
+		button_default.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				spinner_mode.setSelection((int)(0));
+				spinner_level.setSelection((int)(1));
+				spinner_maxtime.setSelection((int)(1));
+				checkbox_timelimit.setChecked(false);
+				useredit.setText("Unknown");
 			}
 		});
 
