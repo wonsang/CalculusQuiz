@@ -41,6 +41,7 @@ public class MainActivity extends Activity {
 	private Button button3;
 	private Button button4;
 	private Button button5;
+	private Button cleanbutton;
 	private Button button6;
 	private Button button7;
 	private Button button8;
@@ -129,6 +130,7 @@ public class MainActivity extends Activity {
 		button3 = (Button) findViewById(R.id.button3);
 		button4 = (Button) findViewById(R.id.button4);
 		button5 = (Button) findViewById(R.id.button5);
+		cleanbutton = (Button) findViewById(R.id.cleanbutton);
 		button6 = (Button) findViewById(R.id.button6);
 		button7 = (Button) findViewById(R.id.button7);
 		button8 = (Button) findViewById(R.id.button8);
@@ -292,11 +294,17 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View _v) { 
 				if (answeredit.getText().toString().length() == 0) {
-					answeredit.setText("");
+					answeredit.setText("0");
 				}
 				else {
 					answeredit.setText(String.valueOf((long)(Double.parseDouble(answeredit.getText().toString()) / 10)));
 				}
+			}
+		});
+		cleanbutton.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				answeredit.setText("0");
 			}
 		});
 
