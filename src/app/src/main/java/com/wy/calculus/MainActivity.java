@@ -26,6 +26,7 @@ public class MainActivity extends Activity {
 	private LinearLayout linear8;
 	private LinearLayout linear9;
 	private LinearLayout linear10;
+	private LinearLayout linear11;
 	private TextView value1view;
 	private TextView operatorview;
 	private TextView value2view;
@@ -96,6 +97,7 @@ public class MainActivity extends Activity {
 	private Intent intentcodes = new Intent();
 	private SharedPreferences config;
 	private Intent settingintent = new Intent();
+	private Vibrator ansvibrator;
 
 
 	@Override
@@ -115,6 +117,7 @@ public class MainActivity extends Activity {
 		linear8 = (LinearLayout) findViewById(R.id.linear8);
 		linear9 = (LinearLayout) findViewById(R.id.linear9);
 		linear10 = (LinearLayout) findViewById(R.id.linear10);
+		linear11 = (LinearLayout) findViewById(R.id.linear11);
 		value1view = (TextView) findViewById(R.id.value1view);
 		operatorview = (TextView) findViewById(R.id.operatorview);
 		value2view = (TextView) findViewById(R.id.value2view);
@@ -164,6 +167,7 @@ public class MainActivity extends Activity {
 
 		config = getSharedPreferences("config", Activity.MODE_PRIVATE);
 
+		ansvibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
 		submitbutton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -380,6 +384,7 @@ public class MainActivity extends Activity {
 			iscorrect = true;
 			_updatescore(delta);
 			showMessage("Excellent!");
+			ansvibrator.vibrate((long)(100));
 		}
 		else {
 			iscorrect = false;
