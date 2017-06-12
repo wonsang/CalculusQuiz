@@ -34,9 +34,9 @@ public class MainActivity extends Activity {
 	private EditText answeredit;
 	private TextView resulttext;
 	private TextView answerview;
-	private Button nextbutton;
-	private Button submitbutton;
 	private Button clearbutton;
+	private Button submitbutton;
+	private Button nextbutton;
 	private Button button1;
 	private Button button2;
 	private Button button3;
@@ -89,6 +89,7 @@ public class MainActivity extends Activity {
 	private String username = "";
 	private double delta = 0;
 	private double issound = 0;
+	private double autonext = 0;
 
 	private ArrayList<String> rankusers = new ArrayList<String>();
 	private ArrayList<Double> rankscores = new ArrayList<Double>();
@@ -127,9 +128,9 @@ public class MainActivity extends Activity {
 		answeredit = (EditText) findViewById(R.id.answeredit);
 		resulttext = (TextView) findViewById(R.id.resulttext);
 		answerview = (TextView) findViewById(R.id.answerview);
-		nextbutton = (Button) findViewById(R.id.nextbutton);
-		submitbutton = (Button) findViewById(R.id.submitbutton);
 		clearbutton = (Button) findViewById(R.id.clearbutton);
+		submitbutton = (Button) findViewById(R.id.submitbutton);
+		nextbutton = (Button) findViewById(R.id.nextbutton);
 		button1 = (Button) findViewById(R.id.button1);
 		button2 = (Button) findViewById(R.id.button2);
 		button3 = (Button) findViewById(R.id.button3);
@@ -184,6 +185,15 @@ public class MainActivity extends Activity {
 						cntview.setText(String.valueOf((long)(count)));
 						_checkanswer();
 						isreadysubmit = false;
+					}
+				}
+				if (0 < autonext) {
+					if (!isreadysubmit || (isreadysubmit && (timecnt < 0))) {
+						if (0 < maxtime) {
+								reporttimer.cancel();
+						}
+						isreadysubmit = true;
+						_newproblem();
 					}
 				}
 			}
@@ -329,6 +339,12 @@ public class MainActivity extends Activity {
 			soundintent = MediaPlayer.create(getApplicationContext(), R.raw.lalala);
 			soundintent.setLooping(true);
 			soundintent.start();
+		}
+		if (0 < autonext) {
+			nextbutton.setVisibility(View.INVISIBLE);
+		}
+		else {
+			nextbutton.setVisibility(View.VISIBLE);
 		}
 		_newproblem();
 	}
@@ -526,6 +542,12 @@ public class MainActivity extends Activity {
 		}
 		else {
 			issound = Double.parseDouble(config.getString("issound", ""));
+		}
+		if (config.getString("autonext", "").length() == 0) {
+			autonext = 0;
+		}
+		else {
+			autonext = Double.parseDouble(config.getString("autonext", ""));
 		}
 	}
 	private void _updaterank () {

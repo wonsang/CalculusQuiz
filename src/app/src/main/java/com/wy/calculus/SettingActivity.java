@@ -31,6 +31,7 @@ public class SettingActivity extends Activity {
 	private CheckBox checkbox_timelimit;
 	private Spinner spinner_maxtime;
 	private CheckBox checkbox_sound;
+	private CheckBox checkbox_autonext;
 	private TextView usertext;
 	private EditText useredit;
 	private Button button_close;
@@ -41,6 +42,7 @@ public class SettingActivity extends Activity {
 	private double level = 0;
 	private double maxtime = 0;
 	private double issound = 0;
+	private double autonext = 0;
 
 	private ArrayList<String> modelist = new ArrayList<String>();
 	private ArrayList<String> levellist = new ArrayList<String>();
@@ -72,6 +74,7 @@ public class SettingActivity extends Activity {
 		checkbox_timelimit = (CheckBox) findViewById(R.id.checkbox_timelimit);
 		spinner_maxtime = (Spinner) findViewById(R.id.spinner_maxtime);
 		checkbox_sound = (CheckBox) findViewById(R.id.checkbox_sound);
+		checkbox_autonext = (CheckBox) findViewById(R.id.checkbox_autonext);
 		usertext = (TextView) findViewById(R.id.usertext);
 		useredit = (EditText) findViewById(R.id.useredit);
 		button_close = (Button) findViewById(R.id.button_close);
@@ -107,8 +110,15 @@ public class SettingActivity extends Activity {
 				else {
 					issound = 0;
 				}
+				if (checkbox_autonext.isChecked()) {
+					autonext = 1;
+				}
+				else {
+					autonext = 0;
+				}
 				config.edit().putString("maxtime", String.valueOf((long)(maxtime))).commit();
 				config.edit().putString("issound", String.valueOf((long)(issound))).commit();
+				config.edit().putString("autonext", String.valueOf((long)(autonext))).commit();
 				config.edit().putString("username", useredit.getText().toString()).commit();
 				mainintent.setClass(getApplicationContext(), MainActivity.class);
 				startActivity(mainintent);
@@ -122,6 +132,7 @@ public class SettingActivity extends Activity {
 				spinner_maxtime.setSelection((int)(1));
 				checkbox_timelimit.setChecked(false);
 				checkbox_sound.setChecked(false);
+				checkbox_autonext.setChecked(false);
 				useredit.setText("Unknown");
 			}
 		});
@@ -185,6 +196,12 @@ public class SettingActivity extends Activity {
 		}
 		else {
 			checkbox_sound.setChecked(true);
+		}
+		if ((config.getString("autonext", "").length() == 0) || (Double.parseDouble(config.getString("autonext", "")) == 0)) {
+			checkbox_autonext.setChecked(false);
+		}
+		else {
+			checkbox_autonext.setChecked(true);
 		}
 	}
 
