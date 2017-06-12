@@ -88,6 +88,7 @@ public class MainActivity extends Activity {
 	private double opmode = 0;
 	private String username = "";
 	private double delta = 0;
+	private double issound = 0;
 
 	private ArrayList<String> rankusers = new ArrayList<String>();
 	private ArrayList<Double> rankscores = new ArrayList<Double>();
@@ -98,6 +99,7 @@ public class MainActivity extends Activity {
 	private SharedPreferences config;
 	private Intent settingintent = new Intent();
 	private Vibrator ansvibrator;
+	private MediaPlayer soundintent;
 
 
 	@Override
@@ -169,6 +171,7 @@ public class MainActivity extends Activity {
 
 		ansvibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
 
+
 		submitbutton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View _v) { 
@@ -222,6 +225,9 @@ public class MainActivity extends Activity {
 		settingbutton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View _v) { 
+				if (0 < issound) {
+					soundintent.pause();
+				}
 				settingintent.setClass(getApplicationContext(), SettingActivity.class);
 				startActivity(settingintent);
 			}
@@ -319,6 +325,11 @@ public class MainActivity extends Activity {
 		count = 0;
 		isreadysubmit = true;
 		_updatesetting();
+		if (0 < issound) {
+			soundintent = MediaPlayer.create(getApplicationContext(), R.raw.lalala);
+			soundintent.setLooping(true);
+			soundintent.start();
+		}
 		_newproblem();
 	}
 
@@ -509,6 +520,12 @@ public class MainActivity extends Activity {
 		}
 		else {
 			username = config.getString("username", "");
+		}
+		if (config.getString("issound", "").length() == 0) {
+			issound = 0;
+		}
+		else {
+			issound = Double.parseDouble(config.getString("issound", ""));
 		}
 	}
 	private void _updaterank () {

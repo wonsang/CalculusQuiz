@@ -23,12 +23,14 @@ public class SettingActivity extends Activity {
 	private LinearLayout linear3;
 	private LinearLayout linear4;
 	private LinearLayout linear5;
+	private LinearLayout linear6;
 	private TextView textview_mode;
 	private Spinner spinner_mode;
 	private TextView textview_level;
 	private Spinner spinner_level;
 	private CheckBox checkbox_timelimit;
 	private Spinner spinner_maxtime;
+	private CheckBox checkbox_sound;
 	private TextView usertext;
 	private EditText useredit;
 	private Button button_close;
@@ -38,6 +40,7 @@ public class SettingActivity extends Activity {
 	private double mode = 0;
 	private double level = 0;
 	private double maxtime = 0;
+	private double issound = 0;
 
 	private ArrayList<String> modelist = new ArrayList<String>();
 	private ArrayList<String> levellist = new ArrayList<String>();
@@ -61,12 +64,14 @@ public class SettingActivity extends Activity {
 		linear3 = (LinearLayout) findViewById(R.id.linear3);
 		linear4 = (LinearLayout) findViewById(R.id.linear4);
 		linear5 = (LinearLayout) findViewById(R.id.linear5);
+		linear6 = (LinearLayout) findViewById(R.id.linear6);
 		textview_mode = (TextView) findViewById(R.id.textview_mode);
 		spinner_mode = (Spinner) findViewById(R.id.spinner_mode);
 		textview_level = (TextView) findViewById(R.id.textview_level);
 		spinner_level = (Spinner) findViewById(R.id.spinner_level);
 		checkbox_timelimit = (CheckBox) findViewById(R.id.checkbox_timelimit);
 		spinner_maxtime = (Spinner) findViewById(R.id.spinner_maxtime);
+		checkbox_sound = (CheckBox) findViewById(R.id.checkbox_sound);
 		usertext = (TextView) findViewById(R.id.usertext);
 		useredit = (EditText) findViewById(R.id.useredit);
 		button_close = (Button) findViewById(R.id.button_close);
@@ -96,7 +101,14 @@ public class SettingActivity extends Activity {
 				else {
 					maxtime = 0;
 				}
+				if (checkbox_sound.isChecked()) {
+					issound = 1;
+				}
+				else {
+					issound = 0;
+				}
 				config.edit().putString("maxtime", String.valueOf((long)(maxtime))).commit();
+				config.edit().putString("issound", String.valueOf((long)(issound))).commit();
 				config.edit().putString("username", useredit.getText().toString()).commit();
 				mainintent.setClass(getApplicationContext(), MainActivity.class);
 				startActivity(mainintent);
@@ -109,6 +121,7 @@ public class SettingActivity extends Activity {
 				spinner_level.setSelection((int)(1));
 				spinner_maxtime.setSelection((int)(1));
 				checkbox_timelimit.setChecked(false);
+				checkbox_sound.setChecked(false);
 				useredit.setText("Unknown");
 			}
 		});
@@ -166,6 +179,12 @@ public class SettingActivity extends Activity {
 		}
 		else {
 			useredit.setText(config.getString("username", ""));
+		}
+		if ((config.getString("issound", "").length() == 0) || (Double.parseDouble(config.getString("issound", "")) == 0)) {
+			checkbox_sound.setChecked(false);
+		}
+		else {
+			checkbox_sound.setChecked(true);
 		}
 	}
 
