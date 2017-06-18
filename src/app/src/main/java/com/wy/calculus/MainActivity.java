@@ -6,6 +6,7 @@ import android.view.*;
 import android.view.View.*;
 import android.widget.*;
 import android.content.*;
+import android.content.ClipboardManager;
 import android.graphics.*;
 import android.media.*;
 import android.net.*;
@@ -14,6 +15,7 @@ import android.util.*;
 import android.webkit.*;
 import java.util.*;
 import java.text.*;
+
 
 
 public class MainActivity extends Activity {
@@ -34,9 +36,6 @@ public class MainActivity extends Activity {
 	private EditText answeredit;
 	private TextView resulttext;
 	private TextView answerview;
-	private Button clearbutton;
-	private Button submitbutton;
-	private Button nextbutton;
 	private Button button1;
 	private Button button2;
 	private Button button3;
@@ -49,6 +48,8 @@ public class MainActivity extends Activity {
 	private Button button9;
 	private Button button0;
 	private Button backbutton;
+	private Button submitbutton;
+	private Button nextbutton;
 	private TextView scoretext;
 	private TextView scoreview;
 	private TextView cnttext;
@@ -69,8 +70,9 @@ public class MainActivity extends Activity {
 	private TextView usertext3;
 	private TextView userscore3;
 	private Button settingbutton;
+	private Button clearbutton;
 	private Button buttonhelp;
-	private Button aboutbutton;
+	private ImageView imageview1;
 
 	private double value1 = 0;
 	private double value2 = 0;
@@ -128,9 +130,6 @@ public class MainActivity extends Activity {
 		answeredit = (EditText) findViewById(R.id.answeredit);
 		resulttext = (TextView) findViewById(R.id.resulttext);
 		answerview = (TextView) findViewById(R.id.answerview);
-		clearbutton = (Button) findViewById(R.id.clearbutton);
-		submitbutton = (Button) findViewById(R.id.submitbutton);
-		nextbutton = (Button) findViewById(R.id.nextbutton);
 		button1 = (Button) findViewById(R.id.button1);
 		button2 = (Button) findViewById(R.id.button2);
 		button3 = (Button) findViewById(R.id.button3);
@@ -143,6 +142,8 @@ public class MainActivity extends Activity {
 		button9 = (Button) findViewById(R.id.button9);
 		button0 = (Button) findViewById(R.id.button0);
 		backbutton = (Button) findViewById(R.id.backbutton);
+		submitbutton = (Button) findViewById(R.id.submitbutton);
+		nextbutton = (Button) findViewById(R.id.nextbutton);
 		scoretext = (TextView) findViewById(R.id.scoretext);
 		scoreview = (TextView) findViewById(R.id.scoreview);
 		cnttext = (TextView) findViewById(R.id.cnttext);
@@ -163,8 +164,9 @@ public class MainActivity extends Activity {
 		usertext3 = (TextView) findViewById(R.id.usertext3);
 		userscore3 = (TextView) findViewById(R.id.userscore3);
 		settingbutton = (Button) findViewById(R.id.settingbutton);
+		clearbutton = (Button) findViewById(R.id.clearbutton);
 		buttonhelp = (Button) findViewById(R.id.buttonhelp);
-		aboutbutton = (Button) findViewById(R.id.aboutbutton);
+		imageview1 = (ImageView) findViewById(R.id.imageview1);
 
 
 
@@ -242,14 +244,6 @@ public class MainActivity extends Activity {
 				startActivity(settingintent);
 			}
 		});
-		aboutbutton.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View _v) { 
-				intentcodes.setAction(Intent.ACTION_VIEW);
-				intentcodes.setData(Uri.parse("http://calculusquiz.weebly.com"));
-				startActivity(intentcodes);
-			}
-		});
 		button1.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View _v) { 
@@ -325,6 +319,14 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View _v) { 
 				answeredit.setText("0");
+			}
+		});
+		imageview1.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				intentcodes.setAction(Intent.ACTION_VIEW);
+				intentcodes.setData(Uri.parse("http://calculusquiz.weebly.com/about.html"));
+				startActivity(intentcodes);
 			}
 		});
 
@@ -526,7 +528,7 @@ public class MainActivity extends Activity {
 			level = Double.parseDouble(config.getString("level", ""));
 		}
 		if (config.getString("maxtime", "").length() == 0) {
-			maxtime = 10;
+			maxtime = 0;
 		}
 		else {
 			maxtime = Double.parseDouble(config.getString("maxtime", ""));
@@ -544,7 +546,7 @@ public class MainActivity extends Activity {
 			issound = Double.parseDouble(config.getString("issound", ""));
 		}
 		if (config.getString("autonext", "").length() == 0) {
-			autonext = 0;
+			autonext = 1;
 		}
 		else {
 			autonext = Double.parseDouble(config.getString("autonext", ""));
@@ -552,6 +554,7 @@ public class MainActivity extends Activity {
 	}
 	private void _updaterank () {
 		rankusers.clear();
+		rankscores.clear();
 		if (config.getString("rankuser1", "").length() == 0) {
 			rankusers.add("Unknown");
 			rankscores.add(Double.valueOf(Double.parseDouble("0")));

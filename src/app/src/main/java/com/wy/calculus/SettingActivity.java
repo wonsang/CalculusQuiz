@@ -6,6 +6,7 @@ import android.view.*;
 import android.view.View.*;
 import android.widget.*;
 import android.content.*;
+import android.content.ClipboardManager;
 import android.graphics.*;
 import android.media.*;
 import android.net.*;
@@ -14,6 +15,7 @@ import android.util.*;
 import android.webkit.*;
 import java.util.*;
 import java.text.*;
+
 
 
 public class SettingActivity extends Activity {
@@ -37,6 +39,7 @@ public class SettingActivity extends Activity {
 	private Button button_close;
 	private Button button_save;
 	private Button button_default;
+	private Button button_init;
 
 	private double mode = 0;
 	private double level = 0;
@@ -80,6 +83,7 @@ public class SettingActivity extends Activity {
 		button_close = (Button) findViewById(R.id.button_close);
 		button_save = (Button) findViewById(R.id.button_save);
 		button_default = (Button) findViewById(R.id.button_default);
+		button_init = (Button) findViewById(R.id.button_init);
 
 		config = getSharedPreferences("config", Activity.MODE_PRIVATE);
 
@@ -132,8 +136,20 @@ public class SettingActivity extends Activity {
 				spinner_maxtime.setSelection((int)(1));
 				checkbox_timelimit.setChecked(false);
 				checkbox_sound.setChecked(false);
-				checkbox_autonext.setChecked(false);
+				checkbox_autonext.setChecked(true);
 				useredit.setText("Unknown");
+			}
+		});
+		button_init.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View _v) { 
+				config.edit().putString("rankuser1", "Unknown").commit();
+				config.edit().putString("rankuser2", "Unknown").commit();
+				config.edit().putString("rankuser3", "Unknown").commit();
+				config.edit().putString("rankscore1", "0").commit();
+				config.edit().putString("rankscore2", "0").commit();
+				config.edit().putString("rankscore3", "0").commit();
+				showMessage("Ranking was initialized.");
 			}
 		});
 
